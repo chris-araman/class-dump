@@ -36,6 +36,8 @@
 
 @property (nonatomic, readonly) NSString *referenceString;
 
+@property (nonatomic) NSString *currentFramework;
+
 @end
 
 #pragma mark -
@@ -85,6 +87,8 @@
     [self.resultString setString:@""];
     [self.classDump appendHeaderToString:self.resultString];
 
+    self.currentFramework = [self frameworkForClassName:aClass.name];
+
     [self removeAllClassNameProtocolNameReferences];
     NSString *str = [self importStringForClassName:aClass.superClassName];
     if (str != nil) {
@@ -102,6 +106,8 @@
 
 - (void)didVisitClass:(CDOCClass *)aClass;
 {
+    self.currentFramework = nil;
+
     // Generate the regular output
     [super didVisitClass:aClass];
 
@@ -125,6 +131,8 @@
     [self.resultString setString:@""];
     [self.classDump appendHeaderToString:self.resultString];
 
+    self.currentFramework = [self frameworkForClassName:category.name];
+
     [self removeAllClassNameProtocolNameReferences];
     NSString *str = [self importStringForClassName:category.className];
     if (str != nil) {
@@ -141,6 +149,8 @@
 
 - (void)didVisitCategory:(CDOCCategory *)category;
 {
+    self.currentFramework = nil;
+
     // Generate the regular output
     [super didVisitCategory:category];
 
@@ -162,6 +172,8 @@
     [self.resultString setString:@""];
     [self.classDump appendHeaderToString:self.resultString];
 
+    self.currentFramework = [self frameworkForClassName:protocol.name];
+
     [self removeAllClassNameProtocolNameReferences];
     self.referenceLocation = [self.resultString length];
 
@@ -173,6 +185,8 @@
 
 - (void)didVisitProtocol:(CDOCProtocol *)protocol;
 {
+    self.currentFramework = nil;
+
     // Generate the regular output
     [super didVisitProtocol:protocol];
 
@@ -223,7 +237,7 @@
 {
     if (name != nil) {
         NSString *framework = [self frameworkForClassName:name];
-        if (framework == nil)
+        if (framework == nil || [framework isEqualToString:self.currentFramework])
             return [NSString stringWithFormat:@"#import \"%@.h\"\n", name];
         else
             return [NSString stringWithFormat:@"#import <%@/%@.h>\n", framework, name];
@@ -237,7 +251,7 @@
     if (name != nil) {
         NSString *framework = [self frameworkForProtocolName:name];
         NSString *headerName = [name stringByAppendingString:@"-Protocol.h"];
-        if (framework == nil)
+        if (framework == nil || [framework isEqualToString:self.currentFramework])
             return [NSString stringWithFormat:@"#import \"%@\"\n", headerName];
         else
             return [NSString stringWithFormat:@"#import <%@/%@>\n", framework, headerName];
