@@ -433,11 +433,10 @@ static BOOL debugMerge = NO;
             break;
             
         case T_FUNCTION_POINTER_TYPE:
-            if (currentName == nil)
-                result = @"CDUnknownFunctionPointerType";
-            else
-                result = [NSString stringWithFormat:@"CDUnknownFunctionPointerType %@", currentName];
-            result = [NSString stringWithFormat:@"void * /* %@ */", result];
+            result = @"void * /* CDUnknownFunctionPointerType */";
+            if (currentName != nil) {
+                result = [result stringByAppendingFormat:@" %@", currentName];
+            }
 
             break;
             
@@ -445,11 +444,10 @@ static BOOL debugMerge = NO;
             if (self.types) {
                 result = [self blockSignatureString];
             } else {
-                if (currentName == nil)
-                    result = @"CDUnknownBlockType";
-                else
-                    result = [NSString stringWithFormat:@"CDUnknownBlockType %@", currentName];
-                result = [NSString stringWithFormat:@"id /* %@ */", result];
+                result = @"id /* CDUnknownBlockType */";
+                if (currentName != nil) {
+                    result = [result stringByAppendingFormat:@" %@", currentName];
+                }
             }
             break;
             
