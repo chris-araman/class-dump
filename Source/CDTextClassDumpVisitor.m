@@ -41,8 +41,6 @@ static BOOL debug = NO;
 
 - (void)willVisitClass:(CDOCClass *)aClass;
 {
-    [self.resultString appendString:@"#import <Foundation/NSObjCRuntime.h>\n\nNS_ASSUME_NONNULL_BEGIN\n\n"];
-
     if (aClass.isExported == NO)
         [self.resultString appendString:@"__attribute__((visibility(\"hidden\")))\n"];
 
@@ -64,7 +62,6 @@ static BOOL debug = NO;
         [self.resultString appendString:@"\n"];
 
     [self.resultString appendString:@"@end\n\n"];
-    [self.resultString appendString:@"NS_ASSUME_NONNULL_END\n\n"];
 }
 
 - (void)willVisitIvarsOfClass:(CDOCClass *)aClass;
@@ -79,7 +76,6 @@ static BOOL debug = NO;
 
 - (void)willVisitCategory:(CDOCCategory *)category;
 {
-    [self.resultString appendString:@"#import <Foundation/NSObjCRuntime.h>\n\nNS_ASSUME_NONNULL_BEGIN\n\n"];
     [self.resultString appendFormat:@"@interface %@ (%@)", category.className, category.name];
 
     NSArray *protocols = category.protocols;
@@ -93,12 +89,10 @@ static BOOL debug = NO;
 - (void)didVisitCategory:(CDOCCategory *)category;
 {
     [self.resultString appendString:@"@end\n\n"];
-    [self.resultString appendString:@"NS_ASSUME_NONNULL_END\n\n"];
 }
 
 - (void)willVisitProtocol:(CDOCProtocol *)protocol;
 {
-    [self.resultString appendString:@"#import <Foundation/NSObjCRuntime.h>\n\nNS_ASSUME_NONNULL_BEGIN\n\n"];
     [self.resultString appendFormat:@"@protocol %@", protocol.name];
 
     NSArray *protocols = protocol.protocols;
@@ -117,7 +111,6 @@ static BOOL debug = NO;
 - (void)didVisitProtocol:(CDOCProtocol *)protocol;
 {
     [self.resultString appendString:@"@end\n\n"];
-    [self.resultString appendString:@"NS_ASSUME_NONNULL_END\n\n"];
 }
 
 - (void)visitClassMethod:(CDOCMethod *)method;

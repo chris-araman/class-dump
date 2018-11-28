@@ -98,6 +98,7 @@
 
     self.referenceLocation = [self.resultString length];
 
+    [self.resultString setString:@"#import <Foundation/NSObjCRuntime.h>\n\nNS_ASSUME_NONNULL_BEGIN\n\n"];
     // And then generate the regular output
     [super willVisitClass:aClass];
     
@@ -110,6 +111,7 @@
 
     // Generate the regular output
     [super didVisitClass:aClass];
+    [self.resultString appendString:@"NS_ASSUME_NONNULL_END\n\n"];
 
     // Then insert the imports and write the file.
     [self removeReferenceToClassName:aClass.name];
@@ -141,6 +143,7 @@
     }
     self.referenceLocation = [self.resultString length];
 
+    [self.resultString appendString:@"#import <Foundation/NSObjCRuntime.h>\n\nNS_ASSUME_NONNULL_BEGIN\n\n"];
     // And then generate the regular output
     [super willVisitCategory:category];
 
@@ -153,6 +156,7 @@
 
     // Generate the regular output
     [super didVisitCategory:category];
+    [self.resultString appendString:@"NS_ASSUME_NONNULL_END\n\n"];
 
     // Then insert the imports and write the file.
     [self removeReferenceToClassName:category.className];
@@ -177,6 +181,7 @@
     [self removeAllClassNameProtocolNameReferences];
     self.referenceLocation = [self.resultString length];
 
+    [self.resultString appendString:@"#import <Foundation/NSObjCRuntime.h>\n\nNS_ASSUME_NONNULL_BEGIN\n\n"];
     // And then generate the regular output
     [super willVisitProtocol:protocol];
 
@@ -189,6 +194,7 @@
 
     // Generate the regular output
     [super didVisitProtocol:protocol];
+    [self.resultString appendString:@"NS_ASSUME_NONNULL_END\n\n"];
 
     // Then insert the imports and write the file.
     NSString *referenceString = self.referenceString;
